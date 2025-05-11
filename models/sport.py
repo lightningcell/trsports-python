@@ -1,12 +1,14 @@
-from . import db
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from .base import Base
 from .associations import sport_facility
 
-class Sport(db.Model):
+class Sport(Base):
     __tablename__ = 'sport'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    name = db.Column(db.String(50), nullable=False)  # Spor dalı adı
+    id = Column(Integer, primary_key=True)  # Birincil anahtar
+    name = Column(String(50), nullable=False)  # Spor dalı adı
 
     # İlişkiler
-    memberships = db.relationship('Membership', back_populates='sport')  # Üyelikler
-    sessions = db.relationship('TrainSession', back_populates='sport')  # Seanslar
-    facilities = db.relationship('Facility', secondary=sport_facility, back_populates='sports')  # Çoktan-çoğa tesisler 
+    memberships = relationship('Membership', back_populates='sport')  # Üyelikler
+    sessions = relationship('TrainSession', back_populates='sport')  # Seanslar
+    facilities = relationship('Facility', secondary=sport_facility, back_populates='sports')  # Çoktan-çoğa tesisler

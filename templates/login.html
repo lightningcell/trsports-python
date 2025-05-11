@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Giriş - TRSPORTS{% endblock %}
+
+{% block content %}
+<section class="login">
+    <div class="login__overlay"></div>
+    <div class="form-wrapper">
+        <form method="post" class="form">
+            <div class="form__group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" id="username" name="username" class="form__input">
+            </div>
+            <div class="form__group form__input-password">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" class="form__input">
+                <button type="button" class="password-toggle" aria-label="Parolayı göster/gizle">👁️</button>
+            </div>
+            <button type="submit" class="form__button">GİRİŞ YAP <span>→</span></button>
+        </form>
+        <div class="divider">VEYA</div>
+        <div class="social-login-buttons">
+            <a href="{{ url_for('oauth_login', provider='google') }}" class="social-login-button social-login-button--google">
+                <img src="{{ url_for('static', filename='images/google-icon.svg') }}" alt="Google ikon"> Google hesabı ile giriş yap
+            </a>
+            <a href="{{ url_for('oauth_login', provider='microsoft') }}" class="social-login-button social-login-button--microsoft">
+                <img src="{{ url_for('static', filename='images/microsoft-icon.svg') }}" alt="Microsoft ikon"> Microsoft hesabı ile giriş yap
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %} 

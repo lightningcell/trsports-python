@@ -1,12 +1,14 @@
-from . import db
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy.orm import relationship
+from .base import Base
 
-class UserInformation(db.Model):
+class UserInformation(Base):
     __tablename__ = 'user_information'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True)  # 1:1 Kullanıcı referansı
-    has_sport_past = db.Column(db.Boolean, default=False)  # Spor geçmişi var mı?
-    has_disability = db.Column(db.Boolean, default=False)  # Engelli mi?
-    address = db.Column(db.String(255), nullable=True)  # Adres bilgisi
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), unique=True)  # 1:1 Kullanıcı referansı
+    has_sport_past = Column(Boolean, default=False)  # Spor geçmişi var mı?
+    has_disability = Column(Boolean, default=False)  # Engelli mi?
+    address = Column(String(255), nullable=True)  # Adres bilgisi
 
     # İlişkiler
-    user = db.relationship('User', back_populates='information', uselist=False)  # Kullanıcı bilgisi 
+    user = relationship('User', back_populates='information', uselist=False)  # Kullanıcı bilgisi

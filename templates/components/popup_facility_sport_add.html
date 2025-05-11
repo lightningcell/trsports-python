@@ -1,0 +1,34 @@
+<form id="add-facility-sport-form">
+  <div class="form__group">
+    <label for="facility-sport-select">Spor Dalı</label>
+    <select id="facility-sport-select" class="form__input" required>
+      <option value="">Spor seçiniz...</option>
+    </select>
+  </div>
+  <div class="form__group">
+    <label for="facility-sport-price">Fiyat (₺)</label>
+    <input type="number" id="facility-sport-price" class="form__input" step="0.01" placeholder="0.00" required>
+  </div>
+</form>
+<script>
+(async function() {
+  const select = document.getElementById('facility-sport-select');
+  const existing = window.facilitySports || [];
+  // fetch all sports
+  const all = await fetch('/api/sports').then(r=>r.json());
+  all.forEach(s => {
+    if (!existing.includes(s.id)) {
+      const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name;
+      select.appendChild(opt);
+    }
+  });
+  // fiyat input formatlama: tam sayı girilirse .00 ekle
+  const priceInput = document.getElementById('facility-sport-price');
+  priceInput.addEventListener('blur', () => {
+    if (priceInput.value) {
+      const num = parseFloat(priceInput.value);
+      if (!isNaN(num)) priceInput.value = num.toFixed(2);
+    }
+  });
+})();
+</script>

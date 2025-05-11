@@ -1,10 +1,12 @@
-from . import db
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from .base import Base
 
-class City(db.Model):
+class City(Base):
     __tablename__ = 'city'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    name = db.Column(db.String(100), nullable=False)  # Şehir adı
+    id = Column(Integer, primary_key=True)  # Birincil anahtar
+    name = Column(String(100), nullable=False)  # Şehir adı
 
     # İlişkiler
-    districts = db.relationship('District', back_populates='city')  # İlçeleri
-    facilities = db.relationship('Facility', back_populates='city')  # Tesisleri 
+    districts = relationship('District', back_populates='city')  # İlçeleri
+    facilities = relationship('Facility', back_populates='city')  # Tesisleri

@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Ana Sayfa - TRSPORTS{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard__columns">
+        <div class="dashboard__col dashboard__col--sports">
+            <div class="dashboard__header">
+                <span>Spor Dalları</span>
+                <a href="#" class="dashboard__add" id="add-sport-btn"><span class="dashboard__add-text">+ Spor Dalı Oluştur</span></a>
+            </div>
+            <ul class="dashboard__list">
+            </ul>
+        </div>
+        <div class="dashboard__col dashboard__col--facilities">
+            <div class="dashboard__header">
+                <span>Tesisler</span>
+                <a href="#" class="dashboard__add" id="add-facility-btn"><span class="dashboard__add-text">+ Tesis Oluştur</span></a>
+            </div>
+            <ul class="dashboard__list dashboard__list--facilities">
+            </ul>
+        </div>
+        <div class="dashboard__col dashboard__col--announcements">
+            <div class="dashboard__header">
+                <span>Duyurular</span>
+                <a href="#" class="dashboard__add" id="add-announcement-btn"><span class="dashboard__add-text">+ Duyuru Oluştur</span></a>
+            </div>
+            <ul class="dashboard__list dashboard__list--announcements"></ul>
+        </div>
+    </div>
+</section>
+<script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+<script>
+function renderSportsList(sports) {
+  const ul = document.querySelector('.dashboard__col--sports .dashboard__list');
+  ul.innerHTML = '';
+  for (const sport of sports) {
+    const li = document.createElement('li');
+    li.className = 'dashboard__list-item';
+    // Diğer sütunlarda olduğu gibi başlık için <b> etiketi kullanılıyor
+    li.innerHTML = `<b>- ${sport.name}</b>`;
+    ul.appendChild(li);
+  }
+}
+async function fetchAndRenderSports() {
+  const resp = await fetch('/api/sports');
+  const sports = await resp.json();
+  renderSportsList(sports);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAndRenderSports();
+  fetchAndRenderFacilities();
+  fetchAndRenderAnnouncements();
+});
+document.getElementById('add-sport-btn').onclick = function(e) {
+  e.preventDefault();
+  openPopupUrl("{{ url_for('popup_sport_create') }}", async function(overlay) {
+    const name = overlay.querySelector('#sport-name').value.trim();
+    if (!name) {
+      overlay.querySelector('#sport-name').focus();
+      return;
+    }
+    // AJAX ile backend'e gönder
+    const resp = await fetch('/api/sports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    if (resp.ok) {
+      await fetchAndRenderSports();
+      closePopup();
+    } else {
+      const data = await resp.json();
+      alert(data.error || 'Bir hata oluştu.');
+    }
+  });
+};
+
+async function fetchAndRenderFacilities() {
+  const resp = await fetch('/api/facilities');
+  const list = await resp.json();
+  const ulF = document.querySelector('.dashboard__col--facilities .dashboard__list');
+  ulF.innerHTML = '';
+  list.forEach(f => {
+    const li = document.createElement('li');
+    li.className = 'dashboard__list-item';
+    li.innerHTML = `<b>- ${f.name}</b><span class="dashboard__facility-desc">${f.city} / ${f.district}</span> <a href="/facility/${f.id}/sports" class="dashboard__edit" title="Tesis Sporlarını Düzenle"><i class="fa-solid fa-pen-to-square"></i></a>`;
+    ulF.appendChild(li);
+  });
+}
+
+// Facility create popup
+document.getElementById('add-facility-btn').onclick = function(e) {
+  e.preventDefault();
+  openPopupUrl("{{ url_for('popup_facility_create') }}", async overlay => {
+    const name = overlay.querySelector('#facility-name').value.trim();
+    const city_id = overlay.querySelector('#facility-city').value;
+    const district_id = overlay.querySelector('#facility-district').value;
+    if (!name || !city_id || !district_id) return;
+    const resp = await fetch('/api/facilities', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name, city_id, district_id })
+    });
+    if (resp.ok) {
+      await fetchAndRenderFacilities();
+      closePopup();
+    } else {
+      const data = await resp.json(); alert(data.error);
+    }
+  });
+};
+
+// Announcements render
+function renderAnnouncements(list) {
+  const ul = document.querySelector('.dashboard__col--announcements .dashboard__list');
+  ul.innerHTML = '';
+  list.forEach(a => {
+    const li = document.createElement('li');
+    li.className = 'dashboard__list-item';
+    li.innerHTML = `<b>• ${a.title}</b><div class="dashboard__announcement-desc">- ${a.content}</div>`;
+    ul.appendChild(li);
+  });
+}
+async function fetchAndRenderAnnouncements() {
+  const resp = await fetch('/api/announcements');
+  const list = await resp.json();
+  renderAnnouncements(list);
+}
+// Announcement create popup
+document.getElementById('add-announcement-btn').onclick = function(e) {
+  e.preventDefault();
+  openPopupUrl("{{ url_for('popup_announcement_create') }}", async overlay => {
+    const title = overlay.querySelector('#announcement-title').value.trim();
+    const content = overlay.querySelector('#announcement-content').value.trim();
+    if (!title || !content) return;
+    const resp = await fetch('/api/announcements', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ title, content })
+    });
+    if (resp.ok) {
+      await fetchAndRenderAnnouncements();
+      closePopup();
+    } else {
+      const data = await resp.json(); alert(data.error);
+    }
+  });
+};
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Spor Dalları - TRSPORTS{% endblock %}
+{% block content %}
+<section class="dashboard">
+  <div class="dashboard__columns" style="justify-content:center;">
+    <div class="dashboard__col" style="max-width:600px;min-width:320px;">
+      <div class="dashboard__header" style="justify-content:center;">Spor Dalları</div>
+      <ul class="dashboard__list dashboard__list--sports" id="sports-list"></ul>
+    </div>
+  </div>
+</section>
+<script>
+fetch('/api/sports')
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('sports-list');
+    if (!data.length) {
+      list.innerHTML = '<li style="color:#aaa;text-align:center;">Henüz spor dalı yok.</li>';
+      return;
+    }
+    list.innerHTML = data.map(a => `
+      <li class="dashboard__list-item">
+        <b>${a.name}</b>
+      </li>
+    `).join('');
+  });
+</script>
+{% endblock %}

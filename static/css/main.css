@@ -1,0 +1,79 @@
+body {
+    margin: 0px;
+}
+
+.payment, .payment-success {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+}
+.payment__container, .payment-success__container {
+  background: #222;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 0 32px #000a;
+  text-align: center;
+  color: #fff;
+  min-width: 350px;
+}
+.payment__title, .payment-success__title {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.payment__form label {
+  display: block;
+  margin: 0.5rem 0 0.2rem 0;
+  text-align: left;
+}
+.payment__form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.7rem;
+  border-radius: 6px;
+  border: none;
+  background: #333;
+  color: #fff;
+}
+.payment__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.payment__card {
+  background: #1a237e;
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+.payment__card-number {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.payment__card-info span {
+  display: inline-block;
+  margin-right: 1.5rem;
+  font-size: 0.9rem;
+}
+.payment-success__icon {
+  font-size: 4rem;
+  color: var(--color-secondary);
+  margin-bottom: 1.5rem;
+}
+.payment-success__title {
+  margin-bottom: 2rem;
+}
+.payment__back {
+  display: block;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-align: left;
+  text-decoration: none;
+}
+.payment__back:hover { color: var(--color-primary); }

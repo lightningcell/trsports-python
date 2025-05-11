@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Ana Sayfa - TRSPORTS{% endblock %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_home.css') }}">
+
+{% block content %}
+<div class="dashboard">
+  <div class="dashboard__columns">
+    <!-- Bugün Seanslarım -->
+    <div class="dashboard__col dashboard__col--left">
+      <h3 class="dashboard__header">Bugün Seanslarım</h3>
+      <ul class="dashboard__list dashboard__list--sessions"></ul>
+    </div>
+    <!-- Sepetimdekiler -->
+    <div class="dashboard__col dashboard__col--center">
+      <h3 class="dashboard__header">Sepetimdekiler</h3>
+      <ul class="dashboard__list dashboard__list--shopbag" id="dashboard-shopbag-list"></ul>
+      <div class="dashboard__shopbag-total-row">
+        <span class="dashboard__shopbag-total-label">TOPLAM TUTAR:</span>
+        <span class="dashboard__shopbag-total-value" id="dashboard-shopbag-total">0₺</span>
+      </div>
+      <div class="dashboard__shopbag-discount-row" id="dashboard-shopbag-discount-row" style="display:none;">
+        <span class="dashboard__shopbag-discount-label">ÖĞRENCİ İNDİRİMİ (%50):</span>
+        <span class="dashboard__shopbag-discount-value" id="dashboard-shopbag-discounted">0₺</span>
+      </div>
+      <div class="dashboard__shopbag-actions">
+        <button class="btn btn--outline dashboard__shopbag-clear" id="dashboard-shopbag-clear">Sepeti Boşalt</button>
+        <button class="btn dashboard__shopbag-pay" id="dashboard-shopbag-pay">Ödemeye Geç</button>
+      </div>
+    </div>
+    <!-- Üyeliklerim -->
+    <div class="dashboard__col dashboard__col--right">
+      <h3 class="dashboard__header">Üyeliklerim</h3>
+      <ul class="dashboard__list dashboard__list--memberships" id="dashboard-memberships-list"></ul>
+    </div>
+  </div>
+</div>
+<script>
+// Load today's sessions
+async function loadTodaySessions() {
+  const resp = await fetch('/api/sessions/today');
+  if (resp.status === 401) return;
+  const data = await resp.json();
+  const ul = document.querySelector('.dashboard__list--sessions');
+  ul.innerHTML = '';
+  if (data.sessions && data.sessions.length > 0) {
+    data.sessions.forEach(s => {
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${s.sport_name} ${s.start} - ${s.end}</b><br>${s.facility_name}`;
+      ul.appendChild(li);
+    });
+  } else {
+    const li = document.createElement('li');
+    li.textContent = 'Bugün seansınız yok.';
+    ul.appendChild(li);
+  }
+}
+
+async function loadDashboardShopbag() {
+  const resp = await fetch('/api/shopbag/detail');
+  if (resp.status === 401) return;
+  const data = await resp.json();
+  const ul = document.getElementById('dashboard-shopbag-list');
+  ul.innerHTML = '';
+  data.memberships.forEach(m => {
+    const li = document.createElement('li');
+    li.className = 'dashboard__list-item';
+    li.innerHTML = `
+      <div class="dashboard__shopbag-info">
+        <b>- ${m.sport_name} Üyeliği</b>
+        <div class="dashboard__shopbag-facility">${m.facility_name}</div>
+        <span class='dashboard__shopbag-price'>Tutar: <span style='color:#00FF00;font-weight:700;'>${m.price.toFixed(2)}₺</span></span>
+      </div>
+      <button class='dashboard__shopbag-remove' data-id='${m.id}' title='Sil'><i class='fa fa-trash'></i></button>
+    `;
+    ul.appendChild(li);
+  });
+  document.getElementById('dashboard-shopbag-total').textContent = (data.total || 0).toFixed(2) + '₺';
+  if (data.is_student) {
+    document.getElementById('dashboard-shopbag-discount-row').style.display = '';
+    document.getElementById('dashboard-shopbag-discounted').textContent = (data.discounted_total || 0).toFixed(2) + '₺';
+  } else {
+    document.getElementById('dashboard-shopbag-discount-row').style.display = 'none';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadDashboardShopbag);
+document.getElementById('dashboard-shopbag-clear').onclick = async function() {
+  if (!confirm('Sepeti boşaltmak istediğinize emin misiniz?')) return;
+  await fetch('/api/shopbag/clear', {method:'POST'});
+  loadDashboardShopbag();
+};
+document.getElementById('dashboard-shopbag-list').onclick = async function(e) {
+  if (e.target.closest('.dashboard__shopbag-remove')) {
+    const id = e.target.closest('.dashboard__shopbag-remove').dataset.id;
+    await fetch(`/api/shopbag/remove_membership/${id}`, {method:'POST'});
+    loadDashboardShopbag();
+  }
+};
+document.getElementById('dashboard-shopbag-pay').onclick = function() {
+  window.location.href = '/shopbag/pay';
+};
+// Üyeliklerim
+async function loadDashboardMemberships() {
+  const resp = await fetch('/api/memberships/proceed');
+  if (resp.status === 401) return;
+  const data = await resp.json();
+  const ul = document.getElementById('dashboard-memberships-list');
+  ul.innerHTML = '';
+  data.memberships.forEach(m => {
+    const li = document.createElement('li');
+    li.className = 'dashboard__list-item';
+    li.innerHTML = `<b>- ${m.sport_name} Üyeliği</b> <span>${m.facility_name}</span> <span class='dashboard__membership-link' data-id='${m.id}'>Seans Al <i class='fa fa-arrow-right'></i></span>`;
+    ul.appendChild(li);
+  });
+}
+document.addEventListener('DOMContentLoaded', loadDashboardMemberships);
+// Add click handler for proceeding to session selection
+document.getElementById('dashboard-memberships-list').onclick = function(e) {
+  const link = e.target.closest('.dashboard__membership-link');
+  if (link) {
+    const membershipId = link.dataset.id;
+    window.location.href = `/membership/${membershipId}/sessions`;
+  }
+};
+// Initialize today's sessions
+document.addEventListener('DOMContentLoaded', loadTodaySessions);
+</script>
+{% endblock %}

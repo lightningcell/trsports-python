@@ -1,7 +1,8 @@
-from . import db
+from sqlalchemy import Column, Integer, String, Text
+from .base import Base
 
-class Announcement(db.Model):
+class Announcement(Base):
     __tablename__ = 'announcement'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    title = db.Column(db.String(200), nullable=False)  # Duyuru başlığı
-    content = db.Column(db.Text, nullable=False)  # Duyuru içeriği 
+    id = Column(Integer, primary_key=True)
+    title = Column(String(200), nullable=False)  # Duyuru başlığı
+    content = Column(Text, nullable=False)  # Duyuru içeriği

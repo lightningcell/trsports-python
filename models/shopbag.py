@@ -1,9 +1,11 @@
-from . import db
+from sqlalchemy import Column, Integer
+from sqlalchemy.orm import relationship
+from .base import Base
 
-class Shopbag(db.Model):
+class Shopbag(Base):
     __tablename__ = 'shopbag'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
+    id = Column(Integer, primary_key=True)  # Birincil anahtar
 
     # İlişkiler
-    user = db.relationship('User', back_populates='shopbag', uselist=False)  # 1:1 kullanıcı
-    memberships = db.relationship('Membership', back_populates='shopbag')  # İçindeki üyelikler 
+    user = relationship('User', back_populates='shopbag', uselist=False)  # 1:1 kullanıcı
+    memberships = relationship('Membership', back_populates='shopbag')  # İçindeki üyelikler

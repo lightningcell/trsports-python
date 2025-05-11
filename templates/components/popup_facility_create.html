@@ -1,0 +1,45 @@
+<form id="add-facility-form">
+  <div class="form__group">
+    <label for="facility-name">Tesis Adı</label>
+    <input type="text" id="facility-name" name="facility_name" class="form__input" required>
+  </div>
+  <div class="form__group">
+    <label for="facility-city">Şehir</label>
+    <select id="facility-city" name="city_id" class="form__input" required>
+      <option value="">Şehir seçiniz...</option>
+    </select>
+  </div>
+  <div class="form__group">
+    <label for="facility-district">İlçe</label>
+    <select id="facility-district" name="district_id" class="form__input" required>
+      <option value="">İlçe seçiniz...</option>
+    </select>
+  </div>
+</form>
+<script>
+(async function() {
+  const citySel = document.getElementById('facility-city');
+  const distSel = document.getElementById('facility-district');
+  // Şehirleri yükle
+  const cities = await fetch('/api/cities').then(res => res.json());
+  cities.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.name;
+    citySel.appendChild(opt);
+  });
+  // İlçeleri şehir değişimine göre yükle
+  citySel.addEventListener('change', async () => {
+    const cityId = citySel.value;
+    distSel.innerHTML = '<option value="">İlçe seçiniz...</option>';
+    if (!cityId) return;
+    const districts = await fetch(`/api/districts?city_id=${cityId}`).then(res => res.json());
+    districts.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.id;
+      opt.textContent = d.name;
+      distSel.appendChild(opt);
+    });
+  });
+})();
+</script>

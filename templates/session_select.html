@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Seans Seçimi - TRSPORTS{% endblock %}
+
+{% block content %}
+<section class="session-select">
+  <div class="session-select__container">
+    <h2 class="session-select__title">{{ facility.title }} - {{ sport.name }}</h2>
+    <div class="session-select__table">
+      <div class="session-select__row session-select__row--header">
+        <div class="session-select__cell" data-date="{{ week_dates[0] }}">Pazartesi<br><small>{{ week_dates[0] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[1] }}">Salı<br><small>{{ week_dates[1] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[2] }}">Çarşamba<br><small>{{ week_dates[2] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[3] }}">Perşembe<br><small>{{ week_dates[3] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[4] }}">Cuma<br><small>{{ week_dates[4] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[5] }}">Cumartesi<br><small>{{ week_dates[5] }}</small></div>
+        <div class="session-select__cell" data-date="{{ week_dates[6] }}">Pazar<br><small>{{ week_dates[6] }}</small></div>
+      </div>
+      <div class="session-select__row">
+        <div class="session-select__cell">
+          09:30 - 16:30<br><span class="session-select__buy">AL</span><br>
+          17:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 12:30<br><span class="session-select__buy">AL</span><br>
+          13:00 - 15:30<br><span class="session-select__buy">AL</span><br>
+          16:00 - 19:30<br><span class="session-select__buy">AL</span><br>
+          20:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 14:30<br><span class="session-select__buy">AL</span><br>
+          15:30 - 17:30<br><span class="session-select__buy">AL</span><br>
+          18:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 12:30<br><span class="session-select__buy">AL</span><br>
+          13:00 - 15:30<br><span class="session-select__buy">AL</span><br>
+          16:00 - 19:30<br><span class="session-select__buy">AL</span><br>
+          20:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 16:30<br><span class="session-select__buy">AL</span><br>
+          17:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 16:30<br><span class="session-select__buy">AL</span><br>
+          17:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+        <div class="session-select__cell">
+          09:30 - 12:30<br><span class="session-select__buy">AL</span><br>
+          13:00 - 15:30<br><span class="session-select__buy">AL</span><br>
+          16:00 - 19:30<br><span class="session-select__buy">AL</span><br>
+          20:00 - 22:30<br><span class="session-select__buy">AL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+// Handle booking when "AL" is clicked
+document.querySelectorAll('.session-select__buy').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    const cell = this.parentElement;
+    // find preceding text node for the clicked button
+    let node = this.previousSibling;
+    while (node && node.nodeType !== Node.TEXT_NODE) node = node.previousSibling;
+    const times = node.textContent.trim(); // e.g. "13:00 - 15:30"
+    const [start, end] = times.split('-').map(s => s.trim());
+    // determine column (day) index for the cell
+    const row = cell.parentElement;
+    const idx = Array.prototype.indexOf.call(row.children, cell);
+    // get corresponding header cell's date
+    const dateCell = document.querySelector('.session-select__row--header').children[idx];
+    const date = dateCell.getAttribute('data-date');
+    const membershipId = "{{ membership_id }}";
+    window.location.href = `/book_session?membership_id=${membershipId}&start=${start}&end=${end}&date=${date}`;
+  });
+});
+</script>
+{% endblock %}

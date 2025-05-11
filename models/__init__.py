@@ -1,9 +1,7 @@
 # models paket modülü
 # db örneği ve tüm modeller bu paket üzerinden import edilir
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from .base import Base
 
 # Ara tablolar
 from .associations import user_userrole, sport_facility
@@ -19,4 +17,4 @@ from .facility import Facility
 from .sport import Sport
 from .membership import Membership
 from .train_session import TrainSession
-from .announcement import Announcement 
+from .announcement import Announcement

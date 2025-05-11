@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Duyurular - TRSPORTS{% endblock %}
+{% block content %}
+<section class="dashboard">
+  <div class="dashboard__columns" style="justify-content:center;">
+    <div class="dashboard__col" style="max-width:600px;min-width:320px;">
+      <div class="dashboard__header" style="justify-content:center;">Duyurular</div>
+      <ul class="dashboard__list dashboard__list--announcements" id="announcements-list"></ul>
+    </div>
+  </div>
+</section>
+<script>
+fetch('/api/announcements')
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('announcements-list');
+    if (!data.length) {
+      list.innerHTML = '<li style="color:#aaa;text-align:center;">Henüz duyuru yok.</li>';
+      return;
+    }
+    list.innerHTML = data.map(a => `
+      <li class="dashboard__list-item">
+        <b>${a.title}</b>
+        <div class="dashboard__announcement-desc">${a.content}</div>
+      </li>
+    `).join('');
+  });
+</script>
+{% endblock %}

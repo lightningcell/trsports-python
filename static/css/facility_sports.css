@@ -1,0 +1,85 @@
+/* facility_sports.css */
+.facility-sports {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+}
+.facility-sports__container {
+  background: #181818;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  padding: 2.5rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  margin: 2rem auto;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.facility-sports__back {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.facility-sports__back:hover { color: var(--color-primary); }
+.facility-sports__title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.facility-sports__desc {
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.facility-sports__add-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.facility-sports__add-row select {
+  flex: 1 1 0;
+  min-width: 180px;
+}
+.facility-sports__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.facility-sports__list li {
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: var(--font-family);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.facility-sports__remove {
+  background: none;
+  border: none;
+  color: #ff3333;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: color 0.2s;
+}
+.facility-sports__remove:hover {
+  color: #fff;
+}
+@media (max-width: 700px) {
+  .facility-sports__container { padding: 1rem 0.5rem; }
+}

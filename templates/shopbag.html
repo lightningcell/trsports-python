@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block title %}Sepetim - TRSPORTS{% endblock %}
+{% block content %}
+<section class="shopbag">
+  <div class="shopbag__container">
+    <a href="{{ url_for('home') }}" class="shopbag__back"><i class="fa fa-arrow-left"></i> ANA SAYFAYA GERİ DÖN</a>
+    <h2 class="shopbag__title"><i class="fa fa-bolt"></i> SEPETİM</h2>
+    <ul class="shopbag__list" id="shopbag-list"></ul>
+    <div class="shopbag__total-row">
+      <span class="shopbag__total-label">TOPLAM TUTAR:</span>
+      <span class="shopbag__total-value" id="shopbag-total">0₺</span>
+    </div>
+    <div class="shopbag__discount-row" id="shopbag-discount-row" style="display:none;">
+      <span class="shopbag__discount-label">ÖĞRENCİ İNDİRİMİ (%50):</span>
+      <span class="shopbag__discount-value" id="shopbag-discounted">0₺</span>
+    </div>
+    <div class="shopbag__actions">
+      <button class="btn btn--outline shopbag__clear" id="shopbag-clear">Sepeti Boşalt</button>
+      <button class="btn shopbag__pay" id="shopbag-pay">Ödemeye Geç</button>
+    </div>
+  </div>
+</section>
+<script>
+async function loadShopbag() {
+  const resp = await fetch('/api/shopbag/detail');
+  if (resp.status === 401) {
+    window.location.href = '/login';
+    return;
+  }
+  const data = await resp.json();
+  const ul = document.getElementById('shopbag-list');
+  ul.innerHTML = '';
+  data.memberships.forEach(m => {
+    const li = document.createElement('li');
+    li.className = 'shopbag__item';
+    li.innerHTML = `<b>- ${m.sport_name} Üyeliği</b> <span>${m.facility_name}</span><br><span class='shopbag__price'>Tutar: <span style='color:#00FF00;font-weight:700;'>${m.price.toFixed(2)}₺</span></span> <button class='shopbag__remove' data-id='${m.id}' title='Sil'><i class='fa fa-trash'></i></button>`;
+    ul.appendChild(li);
+  });
+  document.getElementById('shopbag-total').textContent = (data.total || 0).toFixed(2) + '₺';
+  if (data.is_student) {
+    document.getElementById('shopbag-discount-row').style.display = '';
+    document.getElementById('shopbag-discounted').textContent = (data.discounted_total || 0).toFixed(2) + '₺';
+  } else {
+    document.getElementById('shopbag-discount-row').style.display = 'none';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadShopbag);
+document.getElementById('shopbag-clear').onclick = async function() {
+  if (!confirm('Sepeti boşaltmak istediğinize emin misiniz?')) return;
+  await fetch('/api/shopbag/clear', {method:'POST'});
+  loadShopbag();
+};
+document.getElementById('shopbag-list').onclick = async function(e) {
+  if (e.target.closest('.shopbag__remove')) {
+    const id = e.target.closest('.shopbag__remove').dataset.id;
+    await fetch(`/api/shopbag/remove_membership/${id}`, {method:'POST'});
+    loadShopbag();
+  }
+};
+document.getElementById('shopbag-pay').onclick = function() {
+  window.location.href = '/shopbag/pay';
+};
+</script>
+<style>
+.shopbag {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+}
+.shopbag__container {
+  background: #181818;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  padding: 2.5rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  margin: 2rem auto;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 10rem;
+}
+.shopbag__back {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.shopbag__back:hover { color: var(--color-primary); }
+.shopbag__title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.shopbag__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.shopbag__item {
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-weight: 600;
+  background: #222;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  position: relative;
+}
+.shopbag__remove {
+  background: none;
+  border: none;
+  color: #ff3333;
+  font-size: 1.1rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1.2rem;
+  top: 1.2rem;
+  transition: color 0.2s;
+}
+.shopbag__remove:hover {
+  color: #fff;
+}
+.shopbag__price {
+  font-size: 1rem;
+  color: #00FF00;
+  font-weight: 700;
+}
+.shopbag__total-row, .shopbag__discount-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+}
+.shopbag__total-label, .shopbag__discount-label {
+  color: #fff;
+  font-weight: 700;
+}
+.shopbag__total-value, .shopbag__discount-value {
+  color: #00FF00;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+.shopbag__discount-label { color: #00FF00; }
+.shopbag__discount-value { color: #00FF00; }
+.shopbag__actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+.shopbag__clear {
+  border: 2px solid #ff3333;
+  color: #ff3333;
+  background: transparent;
+  font-weight: 700;
+}
+.shopbag__clear:hover {
+  background: #ff3333;
+  color: #fff;
+}
+.shopbag__pay {
+  background: #00FF00;
+  color: #000;
+  font-weight: 700;
+  min-width: 180px;
+}
+.shopbag__pay:hover {
+  background: #00cc00;
+}
+@media (max-width: 700px) {
+  .shopbag__container { padding: 1rem 0.5rem; }
+}
+</style>
+{% endblock %}

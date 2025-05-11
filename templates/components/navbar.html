@@ -1,0 +1,36 @@
+<header class="navbar">
+    <div class="navbar__content">
+        <a href="{{ url_for('home') }}" class="navbar__logo">TRSPORTS</a>
+        <nav class="navbar__menu">
+            <ul class="navbar__list">
+                <li class="navbar__item"><a href="{{ url_for('home') }}" class="navbar__link{% if request.endpoint == 'home' %} active{% endif %}">ANA SAYFA</a></li>
+                <li class="navbar__item"><a href="{{ url_for('announcements') }}" class="navbar__link{% if request.endpoint == 'announcements' %} active{% endif %}">DUYURULAR</a></li>
+                <li class="navbar__item"><a href="{{ url_for('packages') }}" class="navbar__link{% if request.endpoint == 'packages' %} active{% endif %}">PAKET SATIN AL</a></li>
+                <li class="navbar__item"><a href="{{ url_for('sports') }}" class="navbar__link{% if request.endpoint == 'sports' %} active{% endif %}">SPOR DALLARI</a></li>
+            </ul>
+        </nav>
+        <div class="navbar__actions">
+            {% if session.user_id %}
+                <a href="{{ url_for('shopbag') }}" class="btn btn--outline btn--cart" id="cart-btn">
+                    SEPETİM <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn btn--outline"><i class="fa-solid fa-right-from-bracket"></i> ÇIKIŞ</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn--outline">Kaydol</a>
+                <a href="{{ url_for('login') }}" class="btn">Giriş</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<script>
+// Sepetim butonundaki membership sayısını dinamik göster
+async function updateCartCount() {
+  const resp = await fetch('/api/shopbag/count');
+  if (resp.ok) {
+    const data = await resp.json();
+    document.getElementById('cart-count').textContent = data.count;
+  }
+}
+document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>

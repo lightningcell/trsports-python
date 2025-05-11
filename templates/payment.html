@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Ödemeyi Tamamla - TRSPORTS{% endblock %}
+{% block content %}
+<section class="payment">
+    <div class="payment__overlay"></div>
+    <div class="payment__form-wrapper">
+        <form method="post" class="payment__form">
+            <div class="payment__card">
+                <div class="payment__card-number">3455 **** **** ****</div>
+                <div class="payment__card-details">
+                    <span>Card holder name</span>
+                    <span>Expiry date</span>
+                </div>
+                <div class="payment__card-info">
+                    <span>John Carter</span>
+                    <span>02/30</span>
+                </div>
+            </div>
+            <div class="payment__group">
+                <label>Kart Sahibinin Adı Soyadı</label>
+                <input type="text" name="card_name" required>
+            </div>
+            <div class="payment__group">
+                <label>Kart Numarası</label>
+                <input type="text" name="card_number" maxlength="19" required>
+            </div>
+            <div class="payment__row">
+                <div class="payment__group">
+                    <label>SKT</label>
+                    <input type="text" name="expiry" maxlength="5" placeholder="AA/YY" required>
+                </div>
+                <div class="payment__group">
+                    <label>CVC</label>
+                    <input type="text" name="cvc" maxlength="4" required>
+                </div>
+            </div>
+            <div class="payment__actions">
+                <a href="{{ url_for('shopbag') }}" class="btn btn--outline">Vazgeç</a>
+                <button type="submit" class="btn">Ödemeyi Tamamla</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

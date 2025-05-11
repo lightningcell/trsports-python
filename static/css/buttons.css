@@ -1,0 +1,26 @@
+.btn {
+    display: inline-block;
+    font-family: var(--font-family);
+    color: var(--color-text);
+    background-color: var(--color-primary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+.btn:hover {
+    transform: scale(1.05);
+}
+.btn:active {
+    transform: scale(0.95);
+}
+.btn--outline {
+    background-color: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+.btn--outline:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+} 

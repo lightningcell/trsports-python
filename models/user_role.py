@@ -1,10 +1,9 @@
-from . import db
-from .associations import user_userrole
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from .base import Base
 
-class UserRole(db.Model):
+class UserRole(Base):
     __tablename__ = 'user_role'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    name = db.Column(db.String(50), nullable=False)  # Rol adı
-
-    # Çoktan-çoğa ilişki
-    users = db.relationship('User', secondary=user_userrole, back_populates='roles') 
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    users = relationship('User', secondary='user_userrole', back_populates='roles')

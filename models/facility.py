@@ -1,15 +1,17 @@
-from . import db
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+from .base import Base
 from .associations import sport_facility
 
-class Facility(db.Model):
+class Facility(Base):
     __tablename__ = 'facility'
-    id = db.Column(db.Integer, primary_key=True)  # Birincil anahtar
-    title = db.Column(db.String(100), nullable=False)  # Tesis başlığı
-    city_id = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=False)  # Şehir referansı
-    district_id = db.Column(db.Integer, db.ForeignKey('district.id'), nullable=False)  # İlçe referansı
+    id = Column(Integer, primary_key=True)  # Birincil anahtar
+    title = Column(String(100), nullable=False)  # Tesis başlığı
+    city_id = Column(Integer, ForeignKey('city.id'), nullable=False)  # Şehir referansı
+    district_id = Column(Integer, ForeignKey('district.id'), nullable=False)  # İlçe referansı
 
     # İlişkiler
-    city = db.relationship('City', back_populates='facilities')  # City ile 1:n
-    district = db.relationship('District', back_populates='facilities')  # District ile 1:n
-    sports = db.relationship('Sport', secondary=sport_facility, back_populates='facilities')  # Çoktan-çoğa sporlar
-    sessions = db.relationship('TrainSession', back_populates='facility')  # Seans kayıtları 
+    city = relationship('City', back_populates='facilities')  # City ile 1:n
+    district = relationship('District', back_populates='facilities')  # District ile 1:n
+    sports = relationship('Sport', secondary=sport_facility, back_populates='facilities')  # Çoktan-çoğa sporlar
+    sessions = relationship('TrainSession', back_populates='facility')  # Seans kayıtları

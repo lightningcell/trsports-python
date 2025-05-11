@@ -1,0 +1,89 @@
+/* Payment & Payment Success CSS */
+.payment, .payment-success {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+}
+.payment__form-wrapper {
+    background: #222;
+    padding: 2rem 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 420px;
+}
+.payment__card {
+    background: linear-gradient(135deg, #1e90ff 60%, #0a0a23 100%);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 16px rgba(30,144,255,0.2);
+}
+.payment__card-number {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.payment__card-details, .payment__card-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+.payment__group {
+    margin-bottom: 1rem;
+}
+.payment__group label {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+.payment__group input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: #333;
+    color: #fff;
+    font-size: 1rem;
+}
+.payment__row {
+    display: flex;
+    gap: 1rem;
+}
+.payment__actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.payment-success__box {
+    background: #181818;
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    max-width: 420px;
+    margin: auto;
+}
+.payment-success__icon {
+    margin-bottom: 1.5rem;
+}
+.payment-success__message h2 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+}
+.payment-success__actions .btn {
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+@media (max-width: 600px) {
+    .payment__form-wrapper, .payment-success__box {
+        padding: 1rem;
+        max-width: 98vw;
+    }
+}

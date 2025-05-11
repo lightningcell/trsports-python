@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+    --color-primary: #FF0000;
+    --color-secondary: #00FF00;
+    --color-text: #FFFFFF;
+    --font-family: 'Montserrat', sans-serif;
+    --spacing: 1rem;
+    --transition-speed: 0.3s;
+    --input-background-color: #333333;
+    --text-box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    --radio-button-shadow: 0px 2px 4px #000000;
+} 
